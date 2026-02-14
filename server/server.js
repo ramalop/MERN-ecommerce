@@ -36,7 +36,6 @@ app.use(express.json());
 
 app.use("/api/auth", authRouter)
 app.use("/api/admin/products",adminProductRouters)
-app.use("/api/admin/products",adminProductRouters)
 app.use("/api/admin/orders",adminOrderRouter)
 app.use("/api/admin/dashboard",adminDashboardRouter)
 
