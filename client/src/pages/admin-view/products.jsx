@@ -37,7 +37,7 @@ const AdminProducts = () => {
   const [currentEditedId, setCurrentEditedId] = useState(null);
   const { productList } = useSelector((state) => state.adminProducts);
 
-  console.log(formData , "formdata")
+  
 
   const dispatch = useDispatch();
 
@@ -56,7 +56,6 @@ const AdminProducts = () => {
     dispatch(editProduct({
       id:currentEditedId,formData
     })).then((data)=>{
-      console.log(data,"edit")
       if (data?.payload.success){
         dispatch(fetchAllProducts())
         setFormData(initialFormData)
@@ -70,7 +69,7 @@ const AdminProducts = () => {
         image: uploadedImageUrl,
       }),
     ).then((data) => {
-      console.log(data);
+
       if (data?.payload?.success) {
         dispatch(fetchAllProducts());
         setOpenCreateProductsDialogue(false);
@@ -82,7 +81,6 @@ const AdminProducts = () => {
   }
 
   function handleDelete(getCurrentProductId){
-    console.log(getCurrentProductId);
     dispatch(deleteProduct(getCurrentProductId)).then((data)=>{
       if (data?.payload?.success){
         dispatch(fetchAllProducts())
@@ -100,7 +98,7 @@ const AdminProducts = () => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
 
-  console.log(productList, "productList");
+
   return (
     <Fragment>
       <div className="mb-5 w-full flex justify-end">

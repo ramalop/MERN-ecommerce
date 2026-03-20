@@ -32,7 +32,7 @@ function createSearchParamsHelper(filterParams) {
     }
   }
 
-  console.log(queryParams, "queryParams");
+  
 
   return queryParams.join("&");
 }
@@ -74,12 +74,12 @@ function ShoppingListing() {
   }
 
   function handleGetProductDetails(getCurrentProductId) {
-    console.log(getCurrentProductId);
+    
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
   function handleAddToCart(getCurrentProductId, getTotalStock) {
-    console.log(cartItems);
+    
     const cartList = cartItems?.items||[]
     const cartItem = cartList.find(item=>item.productId===getCurrentProductId)
     if(cartList && cartItem&& cartItem.quantity>=getTotalStock){

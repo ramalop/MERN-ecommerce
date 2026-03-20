@@ -41,7 +41,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     });
   }
   function handleRatingChange(getRating) {
-    console.log(getRating);
+    
 
     setRating(getRating);
   }

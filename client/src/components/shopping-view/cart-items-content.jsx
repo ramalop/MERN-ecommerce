@@ -11,7 +11,7 @@ const UserCartItemsContent = ({ cartItem }) => {
     (state) => state.shopProducts,
   );
   const dispatch = useDispatch();
-  console.log(cartItem, "cart-items");
+  
 
   
   function handleCartItemDelete(cartItem) {

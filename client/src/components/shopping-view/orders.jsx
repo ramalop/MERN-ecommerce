@@ -31,12 +31,12 @@ const ShopOrders = () => {
   useEffect(() => {
     if (orderDetails !== null) setOpenDetailsDialogue(true);
   }, [orderDetails]);
-  console.log(orderDetails, "OrderDetails");
+  
 
   useEffect(() => {
     dispatch(getAllOrders(user?.id));
   }, [dispatch]);
-  console.log(orderList);
+  
 
   return (
     <Card>

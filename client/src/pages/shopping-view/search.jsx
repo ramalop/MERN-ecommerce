@@ -21,7 +21,7 @@ const Search = () => {
   const dispatch = useDispatch();
 
   function handleAddToCart(getCurrentProductId, getTotalStock) {
-    console.log(cartItems);
+    
     const cartList = cartItems?.items || [];
     const cartItem = cartList.find(
       (item) => item.productId === getCurrentProductId,
@@ -45,7 +45,7 @@ const Search = () => {
     });
   }
   function handleGetProductDetails(getCurrentProductId) {
-    console.log(getCurrentProductId);
+    
     dispatch(fetchProductDetails(getCurrentProductId));
   }
   useEffect(() => {
@@ -67,8 +67,7 @@ const Search = () => {
 
     return () => clearTimeout(timer);
   }, [keyword]);
-  console.log(searchResults, "search result");
-  console.log(keyword, "keyword");
+  
 
   return (
     <div className="container mx-auto mt-10 md:px-6 px-4 py-8">

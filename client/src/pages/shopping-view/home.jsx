@@ -65,7 +65,7 @@ const ShoppingHome = () => {
     navigate("/shop/listing");
   }
   function handleGetProductDetails(productId) {
-    console.log(productId);
+    
 
     dispatch(fetchProductDetails(productId));
   }

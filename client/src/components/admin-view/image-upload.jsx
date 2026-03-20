@@ -17,7 +17,6 @@ const ProductImageUpload = ({
 }) => {
   const inputRef = useRef(null);
   function handleImageFileChange(e) {
-    console.log(e.target.files);
     const selectedFile = e.target.files?.[0];
     if (selectedFile) setImageFile(selectedFile);
   }
@@ -42,7 +41,6 @@ const ProductImageUpload = ({
     const data = new FormData()
     data.append("my_products",imageFile)
     const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/products/upload-image`,data)
-    console.log(response.data);
     
     if(response?.data?.success){
         setUploadedImageUrl(response.data.result.url)

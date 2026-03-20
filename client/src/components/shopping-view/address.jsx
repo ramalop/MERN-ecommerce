@@ -73,7 +73,7 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
       .every((item) => item);
   }
   function handleDeleteAddress(getCurrentAddress) {
-    console.log(user.Id, getCurrentAddress);
+
 
     dispatch(
       deleteAdress({
@@ -102,8 +102,6 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
   useEffect(() => {
     dispatch(fetchAllAddresses(user?.id));
   }, [dispatch]);
-  console.log(user);
-  console.log(addressList);
   
   
 

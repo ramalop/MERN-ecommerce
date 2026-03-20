@@ -19,7 +19,7 @@ const ShoppingCheckout = () => {
     const priceToUse = item?.salePrice || item?.price;
     return sum + priceToUse * item.quantity;
   }, 0);
-  console.log(currentSelectedAddress);
+  
 
   function handleInitiatePaypalPayment() {
     if(cartItems.length===0){
@@ -59,7 +59,7 @@ const ShoppingCheckout = () => {
       payerId: "",
     };
     dispatch(createNewOrder(orderData)).then((data)=>{
-      console.log(data,"orderData");
+      
       if(data?.payload?.success){
         setDidPaymentStarted(true)
       }else{

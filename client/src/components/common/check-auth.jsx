@@ -10,8 +10,8 @@ function CheckAuth({ isAuthenticated, user, children }) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isShopRoute = pathname.startsWith("/shop");
 
-  //  debug (keep for now, remove later)
-  console.log(pathname, isAuthenticated);
+  
+  
 
   if (pathname === "/") {
     if (!isAuthenticated) {
