@@ -78,7 +78,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   useEffect(() => {
     if (productDetails !== null) dispatch(getAllReviews(productDetails?._id));
   }, [productDetails]);
-  console.log(reviews, "reeevieeewws");
   const averageReview = reviews && reviews.length>0?
     reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
     reviews.length:0;

@@ -48,7 +48,9 @@ const brandWithIcons = [
 const ShoppingHome = () => {
   const slides = [bannerOne, bannerTwo, bannerThree];
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { productList , productDetails } = useSelector((state) => state.shopProducts);
+  const { productList, productDetails } = useSelector(
+    (state) => state.shopProducts,
+  );
   const { user } = useSelector((state) => state.auth);
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const dispatch = useDispatch();
@@ -83,8 +85,8 @@ const ShoppingHome = () => {
   }
   //to view the product details(product-tile) dialogue
   useEffect(() => {
-      if (productDetails !== null) setOpenDetailsDialog(true);
-    }, [productDetails]);
+    if (productDetails !== null) setOpenDetailsDialog(true);
+  }, [productDetails]);
 
   //for auto changing of banner
   useEffect(() => {
@@ -145,6 +147,7 @@ const ShoppingHome = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {categoriesWithIcon.map((item) => (
               <Card
+              key={item.id}
                 onClick={() => handleNavigateToListingPage(item, "category")}
                 className="cursor-pointer hover:shadow-lg transition-shadow"
               >
@@ -163,6 +166,7 @@ const ShoppingHome = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {brandWithIcons.map((item) => (
               <Card
+              key={item.id}
                 onClick={() => handleNavigateToListingPage(item, "brand")}
                 className="cursor-pointer hover:shadow-lg transition-shadow"
               >

@@ -32,7 +32,8 @@ function App() {
   //call the redux thunk, backend middleware will be fetched, user will be attached,state will be updated, app.jsx will ReRender
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(checkAuth());
+    const token = JSON.parse(sessionStorage.getItem("token"))
+    dispatch(checkAuth(token));
   }, [dispatch]);
 
   if (isLoading)
