@@ -5,9 +5,10 @@ const ProductSchema = new mongoose.Schema({
     description: String,
     category: String,
     brand: String,
-    price:Number,
-    salePrice:Number,
-    totalStock:Number
-},{timestamps:true})
+    price: Number,
+    salePrice: Number,
+    totalStock: Number,
+    averageReview: Number
+}, { timestamps: true })
 
-module.exports = mongoose.model("Product",ProductSchema)
+module.exports = mongoose.model("Product", ProductSchema)

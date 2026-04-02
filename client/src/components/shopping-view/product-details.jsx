@@ -3,7 +3,6 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { StarIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
@@ -41,8 +40,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     });
   }
   function handleRatingChange(getRating) {
-    
-
     setRating(getRating);
   }
   function handleProductDetailsOpen() {
@@ -78,17 +75,21 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   useEffect(() => {
     if (productDetails !== null) dispatch(getAllReviews(productDetails?._id));
   }, [productDetails]);
-  const averageReview = reviews && reviews.length>0?
-    reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
-    reviews.length:0;
+  const averageReview =
+    reviews && reviews.length > 0
+      ? reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
+        reviews.length
+      : 0;
 
   return (
     <Dialog open={open} onOpenChange={handleProductDetailsOpen}>
-      <DialogContent className="w-[95vw] max-w-5xl
+      <DialogContent
+        className="w-[95vw] max-w-5xl
     grid grid-cols-1 md:grid-cols-2
     gap-4 md:gap-8
     p-4 md:p-8
-    max-h-[90vh] overflow-y-auto">
+    max-h-[90vh] overflow-y-auto"
+      >
         <div className="relative overflow-hidden rounded-lg">
           <img
             src={productDetails?.image}

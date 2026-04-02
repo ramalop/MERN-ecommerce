@@ -45,7 +45,7 @@ function CheckAuth({ isAuthenticated, user, children }) {
     return <Navigate to="/admin/dashboard" replace />;
   }
 
-  // Allowed → render page
+  // Allowed → render child route 
   return <>{children}</>;
 }
 

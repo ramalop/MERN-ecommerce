@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -65,30 +64,36 @@ const AdminDashboard = () => {
     }
   }, [uploadedImageUrl]);
 
-  function handleDelete(id) {
-    dispatch(deleteProduct(id)).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(getAllDashboardData());
-      }
-    });
-  }
-  function onSubmit(e) {
-    e.preventDefault();
+  const handleDelete = useCallback(
+    (id) => {
+      dispatch(deleteProduct(id)).then((data) => {
+        if (data?.payload?.success) {
+          dispatch(getAllDashboardData());
+        }
+      });
+    },
+    [dispatch],
+  );
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
 
-    dispatch(
-      editProduct({
-        id: currentEditedId,
-        formData,
-      }),
-    ).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(getAllDashboardData());
-        setOpenCreateProductsDialogue(false);
-        setCurrentEditedId(null);
-        setFormData(initialFormData);
-      }
-    });
-  }
+      dispatch(
+        editProduct({
+          id: currentEditedId,
+          formData,
+        }),
+      ).then((data) => {
+        if (data?.payload?.success) {
+          dispatch(getAllDashboardData());
+          setOpenCreateProductsDialogue(false);
+          setCurrentEditedId(null);
+          setFormData(initialFormData);
+        }
+      });
+    },
+    [dispatch, currentEditedId, formData],
+  );
 
   return (
     <>
@@ -97,7 +102,7 @@ const AdminDashboard = () => {
       ) : (
         <div className="flex gap-4 flex-col overflow-auto">
           <RecentOrdersForAdmin recentOrders={recentOrders} />
-          <Separator/>
+          <Separator />
           <LowStockProductsForAdmin
             products={lowStockProducts}
             setCurrentEditedId={setCurrentEditedId}
@@ -105,8 +110,8 @@ const AdminDashboard = () => {
             setFormData={setFormData}
             handleDelete={handleDelete}
           />
-          <Separator/>
-          <RecentUsersForAdmin recentUsers={recentUsers}/>
+          <Separator />
+          <RecentUsersForAdmin recentUsers={recentUsers} />
           <Sheet
             open={openCreateProductsDialogue}
             onOpenChange={() => {

@@ -14,15 +14,16 @@ import AdminOrderDetailsView from "./order-details";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersForAdmin, getOrderDetailsForAdmin, resetOrderDetails } from "@/store/admin/order-slice";
 import { Badge } from "../ui/badge";
+import { useCallback } from "react";
 
 const AdminOrdersView = () => {
   const [openDetailsDialogue,setOpenDetailsDialogue] = useState(false)
   const {orderList,orderDetails} = useSelector(state=>state.adminOrder)
   const dispatch = useDispatch()
 
-  function handleFetchOrderDetails(getId){
-    dispatch(getOrderDetailsForAdmin(getId))
-  }
+const handleFetchOrderDetails = useCallback((id) => {
+  dispatch(getOrderDetailsForAdmin(id));
+}, [dispatch]);
   
 
   useEffect(()=>{

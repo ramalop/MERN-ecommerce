@@ -1,5 +1,6 @@
+
 import { filterOptions } from "@/config";
-import React, { Fragment } from "react";
+import React, { Fragment, memo } from "react";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { Separator } from "../ui/separator";
@@ -10,11 +11,15 @@ const ProductFilter = ({ filters, handleFilter }) => {
       <div className="p-4 border-b">
         <h2 className="text-lg font-extrabold">Filters</h2>
       </div>
+
       <div className="p-4 space-y-4">
         {Object.keys(filterOptions).map((keyItem) => (
           <Fragment key={keyItem}>
             <div>
-              <h3 className="text-base font-bold"> {keyItem}</h3>
+              <h3 className="text-base font-bold capitalize">
+                {keyItem}
+              </h3>
+
               <div className="grid gap-2 mt-2">
                 {filterOptions[keyItem].map((option) => (
                   <Label
@@ -22,16 +27,17 @@ const ProductFilter = ({ filters, handleFilter }) => {
                     className="flex items-center gap-2 font-medium"
                   >
                     <Checkbox
-                    checked={
-                      filters?.[keyItem]?.includes(option.id)
-                    }
-                      onCheckedChange={() => handleFilter(keyItem, option.id)}
+                      checked={filters?.[keyItem]?.includes(option.id)}
+                      onCheckedChange={() =>
+                        handleFilter(keyItem, option.id)
+                      }
                     />
                     {option.label}
                   </Label>
                 ))}
               </div>
             </div>
+
             <Separator />
           </Fragment>
         ))}
@@ -40,4 +46,5 @@ const ProductFilter = ({ filters, handleFilter }) => {
   );
 };
 
-export default ProductFilter;
+export default memo(ProductFilter);
+

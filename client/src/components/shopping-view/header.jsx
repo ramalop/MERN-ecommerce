@@ -45,7 +45,7 @@ function MenuItems({ closeMenuSheet }) {
       navigate(menuItem.path);
     }
 
-    // ✅ close mobile sheet after click
+    //  close mobile sheet after click
     closeMenuSheet?.();
   }
 
