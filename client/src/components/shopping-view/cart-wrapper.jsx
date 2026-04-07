@@ -15,7 +15,7 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
   return (
     <SheetContent
       side="right"
-      className="w-screen max-w-none sm:max-w-md flex flex-col h-screen overflow-hidden p-0"
+      className="w-screen max-w-none sm:max-w-md p-0 flex flex-col max-h-screen"
     >
       <div className="shrink-0 border-b bg-background p-6">
         <SheetHeader>
@@ -24,8 +24,8 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
       </div>
 
       {/* Scrollable Cart Items - Only this section scrolls */}
-      <div className="flex-1 overflow-y-auto min-h-0 scroll-smooth scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
-        <div className="space-y-4 p-6 pr-4">
+      <div className="flex-1 overflow-y-auto">
+        <div className="space-y-4 p-6">
           {cartItems && cartItems.length > 0 ? (
             cartItems.map((item) => (
               <UserCartItemsContent key={item.id} cartItem={item} />
