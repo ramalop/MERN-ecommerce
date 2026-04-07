@@ -56,6 +56,8 @@ const ShoppingHome = () => {
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
+  //for add to card button loading state
+  const [loadingProductId, setLoadingProductId] = useState(null);
   const { user } = useSelector((state) => state.auth);
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -83,6 +85,7 @@ const ShoppingHome = () => {
 
   // add to cart
   const handleAddToCart = useCallback((id) => {
+    setLoadingProductId(id)
     dispatch(
       addToCart({
         userId: user?.id,
@@ -90,6 +93,7 @@ const ShoppingHome = () => {
         quantity: 1,
       })
     ).then((data) => {
+      setLoadingProductId(null)
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
         toast.success("Product added to cart");
@@ -221,6 +225,7 @@ const ShoppingHome = () => {
                 product={item}
                 handleGetProductDetails={handleGetProductDetails}
                 handleAddToCart={handleAddToCart}
+                loading={loadingProductId === item._id}
               />
             ))}
           </div>

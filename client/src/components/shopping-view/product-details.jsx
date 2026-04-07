@@ -11,6 +11,7 @@ import { setProductDetails } from "@/store/shop/product-slice";
 import { Label } from "../ui/label";
 import StarRatingComponent from "../common/star-rating";
 import { addReview, getAllReviews } from "@/store/shop/review-slice";
+import { Loader2 } from "lucide-react";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
   const { reviews } = useSelector((state) => state.shopReview);
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   function handleAddReview() {
     setOpen(false);
@@ -58,7 +60,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
       toast.error(`Only ${getTotalStock} quantity available`);
       return;
     }
-
+    setLoading(true);
     dispatch(
       addToCart({
         userId: user?.id,
@@ -66,6 +68,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
         quantity: 1,
       }),
     ).then((data) => {
+      setLoading(false);
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
         toast.success("Product added to cart");
@@ -141,7 +144,11 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                   )
                 }
               >
-                Add To Cart
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Add To Cart"
+                )}
               </Button>
             )}
           </div>
@@ -151,7 +158,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
             <div className="grid gap-6">
               {reviews && reviews.length > 0 ? (
                 reviews.map((reviewItem) => (
-                  <div className="flex gap-4">
+                  <div key={reviewItem?._id} className="flex gap-4">
                     <Avatar className="w-10 h-10 border">
                       <AvatarFallback>
                         {reviewItem?.userName[0].toUpperCase()}

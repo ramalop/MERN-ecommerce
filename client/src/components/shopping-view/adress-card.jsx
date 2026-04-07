@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
+import { Loader2 } from "lucide-react";
 
 const AddressCard = ({
   addressInfo,
@@ -9,6 +10,7 @@ const AddressCard = ({
   handleEditAddress,
   setCurrentSelectedAddress,
   selectedId,
+  loading
 }) => {
   
 
@@ -30,9 +32,9 @@ const AddressCard = ({
       </CardContent>
       <CardFooter className="flex p-3 justify-between">
         <Button
-          onClick={() => {
+          onClick={(e) => {
            
-            handleEditAddress(addressInfo);
+            handleEditAddress(e,addressInfo);
           }}
         >
           Edit
@@ -43,7 +45,7 @@ const AddressCard = ({
             handleDeleteAddress(addressInfo);
           }}
         >
-          Delete
+          {loading?<Loader2 className="animate-spin" size={24} />:"Delete"}
         </Button>
       </CardFooter>
     </Card>

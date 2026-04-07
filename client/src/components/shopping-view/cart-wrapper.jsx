@@ -13,32 +13,46 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
   const navigate = useNavigate();
 
   return (
-    <SheetContent side="right" className="w-screen max-w-none sm:max-w-md">
-      <SheetHeader>
-        <SheetTitle>Your Cart</SheetTitle>
-      </SheetHeader>
-      <div className="mt-8 space-y-4">
-        {cartItems && cartItems?.length > 0
-          ? cartItems.map((item) => (
-              <UserCartItemsContent key={item.title} cartItem={item} />
-            ))
-          : null}
+    <SheetContent
+      side="right"
+      className="w-screen max-w-none sm:max-w-md flex flex-col h-screen overflow-hidden p-0"
+    >
+      <div className="shrink-0 border-b bg-background p-6">
+        <SheetHeader>
+          <SheetTitle>Your Cart</SheetTitle>
+        </SheetHeader>
       </div>
-      <div className="mt-8 space-y-4">
-        <div className="flex justify-between">
-          <span className="font-bold">Total </span>
-          <span className="font-bold">${totalAmount} </span>
+
+      {/* Scrollable Cart Items - Only this section scrolls */}
+      <div className="flex-1 overflow-y-auto min-h-0 scroll-smooth scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+        <div className="space-y-4 p-6 pr-4">
+          {cartItems && cartItems.length > 0 ? (
+            cartItems.map((item) => (
+              <UserCartItemsContent key={item.id} cartItem={item} />
+            ))
+          ) : (
+            <p className="text-center text-gray-500">Your cart is empty</p>
+          )}
         </div>
       </div>
-      <Button
-        onClick={() => {
-          navigate("/shop/checkout");
-          setOpenCartSheet(false);
-        }}
-        className="w-full mt-6"
-      >
-        CheckOut
-      </Button>
+
+      {/* Footer - Fixed */}
+      <div className="shrink-0 border-t bg-background p-6 space-y-4">
+        <div className="flex justify-between">
+          <span className="font-bold">Total</span>
+          <span className="font-bold">${totalAmount}</span>
+        </div>
+
+        <Button
+          onClick={() => {
+            navigate("/shop/checkout");
+            setOpenCartSheet(false);
+          }}
+          className="w-full"
+        >
+          CheckOut
+        </Button>
+      </div>
     </SheetContent>
   );
 };

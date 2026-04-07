@@ -1,16 +1,16 @@
-
 import React, { memo, useCallback } from "react";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
+import { Loader2 } from "lucide-react";
 
 const ShoppingProductTile = ({
   product,
   handleGetProductDetails,
   handleAddToCart,
+  loading,
 }) => {
-
   const onViewDetails = useCallback(() => {
     handleGetProductDetails(product?._id);
   }, [handleGetProductDetails, product]);
@@ -85,8 +85,12 @@ const ShoppingProductTile = ({
             Out of stock
           </Button>
         ) : (
-          <Button onClick={onAddToCart} className="w-full">
-            Add to Cart
+          <Button onClick={onAddToCart} className="w-full" disabled={loading}>
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              "Add to Cart"
+            )}
           </Button>
         )}
       </CardFooter>
@@ -95,4 +99,3 @@ const ShoppingProductTile = ({
 };
 
 export default memo(ShoppingProductTile);
-

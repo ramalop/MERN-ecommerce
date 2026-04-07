@@ -54,7 +54,7 @@ const AdminDashboard = () => {
     dispatch(getAllDashboardData());
   }, [dispatch]);
 
-  // ✅ sync uploaded image → formData
+ 
   useEffect(() => {
     if (uploadedImageUrl) {
       setFormData((prev) => ({

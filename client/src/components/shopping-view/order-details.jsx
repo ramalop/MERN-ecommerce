@@ -4,6 +4,7 @@ import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
 import { useSelector } from "react-redux";
+import { SeparatorHorizontal } from "lucide-react";
 
 const ShopingOrderDetailsView = ({ orderDetails }) => {
   const { user } = useSelector((state) => state.auth);
@@ -12,9 +13,9 @@ const ShopingOrderDetailsView = ({ orderDetails }) => {
   }
   return (
     <DialogContent className="sm:max-w-[600px]">
-      <div className="grid gap-6">
+      <div className="grid gap-6 max-h-[90vh] overflow-y-scroll">
         <div className="grid gap-2">
-          <div className="flex mt-6 items-center justify-between">
+          <div className="flex mt-10 items-center justify-between">
             <p className="font-medium">OrderId</p>
             <Label>{orderDetails?._id}</Label>
           </div>
@@ -53,11 +54,14 @@ const ShopingOrderDetailsView = ({ orderDetails }) => {
               {orderDetails && orderDetails?.cartItems.length > 0
                 ? orderDetails?.cartItems.map((item) => {
                     return (
-                      <li className="flex items-center justify-between">
+                      <li
+                        key={item._id}
+                        className="flex flex-col gap-3 border-b-2 py-2"
+                      >
                         <span>
                           Title :{" "}
-                          {item.title.length > 8
-                            ? item.title.slice(0, 8) + "..."
+                          {item.title.length > 20
+                            ? item.title.slice(0, 20) + "..."
                             : item.title}
                         </span>
                         <span>quantity : {item.quantity}</span>

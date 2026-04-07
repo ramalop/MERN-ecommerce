@@ -57,8 +57,8 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen w-full flex justify-center items-center">
-        <Skeleton className="h-[600px] w-[600px] rounded-full" />
+      <div className="min-h-screen p-4 w-full flex rounded-xl">
+        <Skeleton className="h-[600px] w-[600px]" />
       </div>
     );
   }

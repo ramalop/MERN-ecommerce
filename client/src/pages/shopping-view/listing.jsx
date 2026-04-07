@@ -48,6 +48,8 @@ function ShoppingListing() {
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  //for add to card button loading state
+    const [loadingProductId, setLoadingProductId] = useState(null);
 
   const categorySearchParam = searchParams.get("category");
 
@@ -86,6 +88,7 @@ function ShoppingListing() {
 
   const handleAddToCart = useCallback(
     (id, stock) => {
+      
       const cartList = cartItems?.items || [];
       const cartItem = cartList.find((item) => item.productId === id);
 
@@ -93,7 +96,7 @@ function ShoppingListing() {
         toast.error(`Only ${stock} quantity is available`);
         return;
       }
-
+      setLoadingProductId(id)
       dispatch(
         addToCart({
           userId: user?.id,
@@ -101,6 +104,7 @@ function ShoppingListing() {
           quantity: 1,
         })
       ).then((data) => {
+        setLoadingProductId(null)
         if (data?.payload?.success) {
           dispatch(fetchCartItems(user?.id));
           toast.success("Product Added To Cart");
@@ -178,10 +182,11 @@ function ShoppingListing() {
           {productList?.length > 0 &&
             productList.map((productItem) => (
               <ShoppingProductTile
-                key={productItem._id} // ✅ VERY IMPORTANT
+                key={productItem._id} 
                 product={productItem}
                 handleGetProductDetails={handleGetProductDetails}
                 handleAddToCart={handleAddToCart}
+                loading={loadingProductId === productItem._id}
               />
             ))}
         </div>

@@ -1,6 +1,11 @@
 import { House, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +23,6 @@ import { logoutUser, resetTokenAndCredentials } from "@/store/auth-slice";
 import UserCartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
-
 
 // ================= MENU ITEMS =================
 
@@ -38,9 +42,7 @@ function MenuItems({ closeMenuSheet }) {
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
 
     if (location.pathname.includes("listing") && currentFilter !== null) {
-      setSearchParams(
-        new URLSearchParams(`?category=${menuItem?.id}`)
-      );
+      setSearchParams(new URLSearchParams(`?category=${menuItem?.id}`));
     } else {
       navigate(menuItem.path);
     }
@@ -64,23 +66,24 @@ function MenuItems({ closeMenuSheet }) {
   );
 }
 
-
 // ================= RIGHT HEADER CONTENT =================
 
-function HeaderRightContent() {
+function HeaderRightContent({
+  openCartSheet,
+  setOpenCartSheet,
+  setOpenMenuSheet,
+}) {
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
-
-  const [openCartSheet, setOpenCartSheet] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   function handleLogout() {
     // dispatch(logoutUser());
-    dispatch(resetTokenAndCredentials())
-    sessionStorage.clear()
-    navigate("/auth/login")
+    dispatch(resetTokenAndCredentials());
+    sessionStorage.clear();
+    navigate("/auth/login");
   }
 
   useEffect(() => {
@@ -91,13 +94,15 @@ function HeaderRightContent() {
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
-
       {/* CART SHEET  */}
       <Sheet open={openCartSheet} onOpenChange={setOpenCartSheet}>
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setOpenCartSheet(true)}
+          onClick={() => {
+            setOpenCartSheet(true);
+            setOpenMenuSheet(false);
+          }}
           className="relative"
         >
           <ShoppingCart className="w-6 h-6" />
@@ -116,7 +121,6 @@ function HeaderRightContent() {
         </SheetContent>
       </Sheet>
 
-
       {/* USER DROPDOWN  */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -128,9 +132,7 @@ function HeaderRightContent() {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent side="right" className="w-56">
-          <DropdownMenuLabel>
-            Logged in as {user?.userName}
-          </DropdownMenuLabel>
+          <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
 
           <DropdownMenuSeparator />
 
@@ -144,20 +146,15 @@ function HeaderRightContent() {
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem
-            onClick={handleLogout}
-            className="cursor-pointer"
-          >
+          <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
             <LogOut className="mr-1 h-4 w-4" />
             Logout
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-
     </div>
   );
 }
-
 
 // ================= MAIN HEADER =================
 
@@ -166,17 +163,16 @@ const ShoppingHeader = () => {
 
   // ✅ mobile menu sheet state here
   const [openMenuSheet, setOpenMenuSheet] = useState(false);
+  const [openCartSheet, setOpenCartSheet] = useState(false);
 
   return (
     <header className="fixed top-0 w-full z-40 border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
-
         {/* ===== LOGO ===== */}
         <Link to="/shop/home" className="flex items-center gap-2">
           <House className="h-6 w-6" />
           <span className="font-bold">E Commerce</span>
         </Link>
-
 
         {/* ===== MOBILE MENU SHEET ===== */}
         <Sheet open={openMenuSheet} onOpenChange={setOpenMenuSheet}>
@@ -186,12 +182,17 @@ const ShoppingHeader = () => {
             </Button>
           </SheetTrigger>
 
-          <SheetContent side="left" className="max-w-xs w-full">
+          <SheetContent side="left" className="max-w-xs w-full p-6">
             <MenuItems closeMenuSheet={() => setOpenMenuSheet(false)} />
-            <HeaderRightContent />
+            <div className="mt-6">
+              <HeaderRightContent
+                openCartSheet={openCartSheet}
+                setOpenCartSheet={setOpenCartSheet}
+                setOpenMenuSheet={setOpenMenuSheet}
+              />
+            </div>
           </SheetContent>
         </Sheet>
-
 
         {/* ===== DESKTOP MENU ===== */}
         <div className="hidden lg:block">
@@ -199,9 +200,12 @@ const ShoppingHeader = () => {
         </div>
 
         <div className="hidden lg:block">
-          <HeaderRightContent />
+          <HeaderRightContent
+            openCartSheet={openCartSheet}
+            setOpenCartSheet={setOpenCartSheet}
+            setOpenMenuSheet={setOpenMenuSheet}
+          />
         </div>
-
       </div>
     </header>
   );

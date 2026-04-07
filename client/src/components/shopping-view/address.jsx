@@ -11,6 +11,7 @@ import {
   fetchAllAddresses,
 } from "@/store/shop/adress-slice";
 import AddressCard from "./adress-card";
+import { Skeleton } from "../ui/skeleton";
 
 const initialAdressFormData = {
   address: "",
@@ -22,14 +23,17 @@ const initialAdressFormData = {
 
 const Address = ({setCurrentSelectedAddress,selectedId}) => {
   const [formData, setFormData] = useState(initialAdressFormData);
+  const [loadingId, setLoadingId] = useState(null);
+  const [loading , setLoading] = useState(false)
   const [currentEditedId, setCurrentEditedId] = useState(null);
   const { user } = useSelector((state) => state.auth);
-  const { addressList } = useSelector((state) => state.shopAddress);
+  const { addressList,isLoading } = useSelector((state) => state.shopAddress);
   const dispatch = useDispatch();
   function handleManageAddress(e) {
   e.preventDefault();
 
   if (currentEditedId !== null) {
+    setLoading(true)
     dispatch(
       editAdresses({
         userId: user?.id,
@@ -43,6 +47,8 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
         setCurrentEditedId(null);
         setFormData(initialAdressFormData);
       }
+    }).finally(()=>{
+      setLoading(false)
     });
 
   } else {
@@ -51,7 +57,7 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
       toast.error("You can add maximum of three addresses");
       return;
     }
-
+    setLoading(true)
     dispatch(
       addNewAdress({
         ...formData,
@@ -63,6 +69,8 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
         dispatch(fetchAllAddresses(user?.id));
         setFormData(initialAdressFormData);
       }
+    }).finally(()=>{
+      setLoading(false)
     });
   }
 }
@@ -74,7 +82,7 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
   }
   function handleDeleteAddress(getCurrentAddress) {
 
-
+    setLoadingId(getCurrentAddress._id)
     dispatch(
       deleteAdress({
         userId: getCurrentAddress.userId,
@@ -85,11 +93,14 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
         toast.success("Address deleted successfully")
         dispatch(fetchAllAddresses(getCurrentAddress?.userId));
       }
+    }).finally(()=>{
+      setLoadingId(null)
     });
+    
   }
 
   function handleEditAddress(e,getCurrentAdress) {
-    e.stopPagation()
+    e.stopPropagation()
     setCurrentEditedId(getCurrentAdress._id);
     setFormData({
       address: getCurrentAdress.address,
@@ -106,8 +117,11 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
   
 
   return (
+    <>
+    {isLoading && <Skeleton/>}
     <Card>
-      <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2  gap-2 cursor-pointer">
+      <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2 min-h-[120px] gap-2 cursor-pointer">
+        {addressList.length===0 && <p>No Address added , please fill the below form to add a new address</p>}
         {addressList && addressList.length > 0
           ? addressList.map((singleAddressItem) => (
               <AddressCard
@@ -117,11 +131,12 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
                 handleDeleteAddress={handleDeleteAddress}
                 handleEditAddress={handleEditAddress}
                 setCurrentSelectedAddress={setCurrentSelectedAddress}
+                loading={loadingId === singleAddressItem._id}
               />
             ))
           : null}
       </div>
-      <CardHeader>{currentEditedId?"Edit Address":"Add New Adress"}</CardHeader>
+      <CardHeader>{currentEditedId?"Edit Address":"Add New Address"}</CardHeader>
       <CardContent className="space-y-3">
         <CommonForm
           formControls={addressFormControls}
@@ -130,9 +145,11 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
           onSubmit={handleManageAddress}
           buttonText={currentEditedId?"Edit":"Add"}
           isBtnDisabled={!isFormValid()}
+          loading={loading} 
         />
       </CardContent>
     </Card>
+    </>
   );
 };
 
