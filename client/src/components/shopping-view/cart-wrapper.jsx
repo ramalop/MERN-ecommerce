@@ -24,7 +24,7 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
       </div>
 
       {/* Scrollable Cart Items - Only this section scrolls */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="space-y-4 p-6">
           {cartItems && cartItems.length > 0 ? (
             cartItems.map((item) => (

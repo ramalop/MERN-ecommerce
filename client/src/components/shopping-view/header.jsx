@@ -113,12 +113,10 @@ function HeaderRightContent({
           </span>
         </Button>
 
-        <SheetContent side="right" className="w-full max-w-md">
-          <UserCartWrapper
-            setOpenCartSheet={setOpenCartSheet}
-            cartItems={cartItems?.items || []}
-          />
-        </SheetContent>
+        <UserCartWrapper
+          setOpenCartSheet={setOpenCartSheet}
+          cartItems={cartItems?.items || []}
+        />
       </Sheet>
 
       {/* USER DROPDOWN  */}
@@ -137,7 +135,10 @@ function HeaderRightContent({
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
-            onClick={() => navigate("/shop/account")}
+            onClick={() => {
+              navigate("/shop/account");
+              setOpenMenuSheet(false);
+            }}
             className="cursor-pointer"
           >
             <UserCog className="mr-1 h-4 w-4" />
@@ -146,7 +147,13 @@ function HeaderRightContent({
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+          <DropdownMenuItem
+            onClick={() => {
+              handleLogout();
+              setOpenMenuSheet(false);
+            }}
+            className="cursor-pointer"
+          >
             <LogOut className="mr-1 h-4 w-4" />
             Logout
           </DropdownMenuItem>
