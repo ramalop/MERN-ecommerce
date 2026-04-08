@@ -1,4 +1,3 @@
-
 import ProductFilter from "@/components/shopping-view/filter";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
@@ -38,8 +37,8 @@ function createSearchParamsHelper(filterParams) {
 function ShoppingListing() {
   const dispatch = useDispatch();
 
-  const { productList, productDetails } = useSelector(
-    (state) => state.shopProducts
+  const { productList, productDetails, isLoading } = useSelector(
+    (state) => state.shopProducts,
   );
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
@@ -49,15 +48,13 @@ function ShoppingListing() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   //for add to card button loading state
-    const [loadingProductId, setLoadingProductId] = useState(null);
+  const [loadingProductId, setLoadingProductId] = useState(null);
 
   const categorySearchParam = searchParams.get("category");
 
- 
   const handleSort = useCallback((value) => {
     setSort(value);
   }, []);
-
 
   const handleFilter = useCallback((sectionId, option) => {
     setFilters((prev) => {
@@ -77,18 +74,16 @@ function ShoppingListing() {
     });
   }, []);
 
-
   const handleGetProductDetails = useCallback(
     (id) => {
+      setOpenDetailsDialog(true);
       dispatch(fetchProductDetails(id));
     },
-    [dispatch]
+    [dispatch],
   );
-
 
   const handleAddToCart = useCallback(
     (id, stock) => {
-      
       const cartList = cartItems?.items || [];
       const cartItem = cartList.find((item) => item.productId === id);
 
@@ -96,22 +91,22 @@ function ShoppingListing() {
         toast.error(`Only ${stock} quantity is available`);
         return;
       }
-      setLoadingProductId(id)
+      setLoadingProductId(id);
       dispatch(
         addToCart({
           userId: user?.id,
           productId: id,
           quantity: 1,
-        })
+        }),
       ).then((data) => {
-        setLoadingProductId(null)
+        setLoadingProductId(null);
         if (data?.payload?.success) {
           dispatch(fetchCartItems(user?.id));
           toast.success("Product Added To Cart");
         }
       });
     },
-    [dispatch, cartItems, user]
+    [dispatch, cartItems, user],
   );
 
   //  INITIAL LOAD
@@ -135,24 +130,20 @@ function ShoppingListing() {
         fetchAllFilteredProducts({
           filterParams: filters,
           sortParams: sort,
-        })
+        }),
       );
     }
   }, [dispatch, sort, filters]);
 
   //  OPEN PRODUCT DETAILS
-  useEffect(() => {
-    if (productDetails !== null) setOpenDetailsDialog(true);
-  }, [productDetails]);
+  // Removed - dialog now opens immediately on handleGetProductDetails
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] mt-10 gap-6 p-4 md:p-6">
-      
       {/* FILTER */}
       <ProductFilter filters={filters} handleFilter={handleFilter} />
 
       <div className="bg-background w-full rounded-lg shadow-sm">
-        
         {/* HEADER */}
         <div className="p-4 border-b flex items-center justify-between">
           <h2 className="text-lg font-extrabold">All Products</h2>
@@ -182,7 +173,7 @@ function ShoppingListing() {
           {productList?.length > 0 &&
             productList.map((productItem) => (
               <ShoppingProductTile
-                key={productItem._id} 
+                key={productItem._id}
                 product={productItem}
                 handleGetProductDetails={handleGetProductDetails}
                 handleAddToCart={handleAddToCart}
@@ -197,10 +188,10 @@ function ShoppingListing() {
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
+        isLoading={isLoading}
       />
     </div>
   );
 }
 
 export default ShoppingListing;
-

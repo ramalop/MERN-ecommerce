@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import bannerOne from "../../assets/banner-1.webp";
 import bannerTwo from "../../assets/banner-2.webp";
@@ -53,8 +52,8 @@ const ShoppingHome = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { productList, productDetails } = useSelector(
-    (state) => state.shopProducts
+  const { productList, productDetails, isLoading } = useSelector(
+    (state) => state.shopProducts,
   );
   //for add to card button loading state
   const [loadingProductId, setLoadingProductId] = useState(null);
@@ -67,44 +66,52 @@ const ShoppingHome = () => {
   const slides = useMemo(() => [bannerOne, bannerTwo, bannerThree], []);
 
   //  navigation handler
-  const handleNavigateToListingPage = useCallback((item, section) => {
-    sessionStorage.removeItem("filters");
+  const handleNavigateToListingPage = useCallback(
+    (item, section) => {
+      sessionStorage.removeItem("filters");
 
-    const filter = {
-      [section]: [item.id],
-    };
+      const filter = {
+        [section]: [item.id],
+      };
 
-    sessionStorage.setItem("filters", JSON.stringify(filter));
-    navigate("/shop/listing");
-  }, [navigate]);
+      sessionStorage.setItem("filters", JSON.stringify(filter));
+      navigate("/shop/listing");
+    },
+    [navigate],
+  );
 
   //  product details
-  const handleGetProductDetails = useCallback((id) => {
-    dispatch(fetchProductDetails(id));
-  }, [dispatch]);
+  const handleGetProductDetails = useCallback(
+    (id) => {
+      setOpenDetailsDialog(true);
+      dispatch(fetchProductDetails(id));
+    },
+    [dispatch],
+  );
 
   // add to cart
-  const handleAddToCart = useCallback((id) => {
-    setLoadingProductId(id)
-    dispatch(
-      addToCart({
-        userId: user?.id,
-        productId: id,
-        quantity: 1,
-      })
-    ).then((data) => {
-      setLoadingProductId(null)
-      if (data?.payload?.success) {
-        dispatch(fetchCartItems(user?.id));
-        toast.success("Product added to cart");
-      }
-    });
-  }, [dispatch, user]);
+  const handleAddToCart = useCallback(
+    (id) => {
+      setLoadingProductId(id);
+      dispatch(
+        addToCart({
+          userId: user?.id,
+          productId: id,
+          quantity: 1,
+        }),
+      ).then((data) => {
+        setLoadingProductId(null);
+        if (data?.payload?.success) {
+          dispatch(fetchCartItems(user?.id));
+          toast.success("Product added to cart");
+        }
+      });
+    },
+    [dispatch, user],
+  );
 
   //  auto open dialog
-  useEffect(() => {
-    if (productDetails) setOpenDetailsDialog(true);
-  }, [productDetails]);
+  // Removed - dialog now opens immediately on handleGetProductDetails
 
   //  slider auto move
   useEffect(() => {
@@ -121,13 +128,12 @@ const ShoppingHome = () => {
       fetchAllFilteredProducts({
         filterParams: {},
         sortParams: "price-lowtohigh",
-      })
+      }),
     );
   }, [dispatch]);
 
   return (
     <div className="flex flex-col min-h-screen">
-
       {/* SLIDER */}
       <div className="relative w-full h-[600px] overflow-hidden">
         {slides.map((slide, index) => (
@@ -144,7 +150,9 @@ const ShoppingHome = () => {
           variant="outline"
           size="icon"
           onClick={() =>
-            setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+            setCurrentSlide(
+              (prev) => (prev - 1 + slides.length) % slides.length,
+            )
           }
           className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/80"
         >
@@ -154,9 +162,7 @@ const ShoppingHome = () => {
         <Button
           variant="outline"
           size="icon"
-          onClick={() =>
-            setCurrentSlide((prev) => (prev + 1) % slides.length)
-          }
+          onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
           className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/80"
         >
           <ChevronRightIcon className="w-4 h-4" />
@@ -190,9 +196,7 @@ const ShoppingHome = () => {
       {/* BRAND */}
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            Shop by Brand
-          </h2>
+          <h2 className="text-3xl font-bold text-center mb-8">Shop by Brand</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {brandWithIcons.map((item) => (
@@ -221,7 +225,7 @@ const ShoppingHome = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {productList?.map((item) => (
               <ShoppingProductTile
-                key={item._id} 
+                key={item._id}
                 product={item}
                 handleGetProductDetails={handleGetProductDetails}
                 handleAddToCart={handleAddToCart}
@@ -237,10 +241,10 @@ const ShoppingHome = () => {
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
+        isLoading={isLoading}
       />
     </div>
   );
 };
 
 export default ShoppingHome;
-
