@@ -12,6 +12,7 @@ import {
 } from "@/store/shop/adress-slice";
 import AddressCard from "./adress-card";
 import { Skeleton } from "../ui/skeleton";
+import { Loader2 } from "lucide-react";
 
 const initialAdressFormData = {
   address: "",
@@ -118,7 +119,7 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
 
   return (
     <>
-    {isLoading && <Skeleton/>}
+    {isLoading ? <div className="w-full h-full flex items-center justify-center"><Loader2 className="animate-spin"/></div>:
     <Card>
       <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2 min-h-[120px] gap-2 cursor-pointer">
         {addressList.length===0 && <p>No Address added , please fill the below form to add a new address</p>}
@@ -149,6 +150,7 @@ const Address = ({setCurrentSelectedAddress,selectedId}) => {
         />
       </CardContent>
     </Card>
+}
     </>
   );
 };
