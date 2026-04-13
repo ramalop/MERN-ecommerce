@@ -1,4 +1,3 @@
-
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
@@ -10,6 +9,8 @@ import AuthRegister from "./pages/auth/register";
 
 import AdminLayout from "./components/admin-view/layout";
 import ShoppingLayout from "./components/shopping-view/layout";
+import AdminDashboard from "./pages/admin-view/dashboard"; // CHANGED: eager import for admin dashboard
+import ShoppingHome from "./pages/shopping-view/home"; // CHANGED: eager import for shop home
 
 import CheckAuth from "./components/common/check-auth";
 import NotFound from "./pages/not-found";
@@ -18,25 +19,100 @@ import UnauthPage from "./pages/unauth-page";
 import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// 🔥 Lazy loaded ADMIN pages
-const AdminDashboard = lazy(() => import("./pages/admin-view/dashboard"));
+// Loading Skeletons
+function InitialLoadingSkeleton() {
+  return (
+    <div className="min-h-screen w-full bg-background">
+      {/* Header Skeleton */}
+      <div className="border-b">
+        <div className="flex items-center justify-between p-4">
+          <Skeleton className="h-8 w-32" />
+          <div className="flex gap-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} className="h-6 w-20" />
+            ))}
+          </div>
+          <Skeleton className="h-8 w-8 rounded-full" />
+        </div>
+      </div>
+
+      {/* Hero Banner Skeleton */}
+      <div className="w-full h-96 bg-muted animate-pulse rounded-lg my-4 mx-4">
+        <Skeleton className="w-full h-full rounded-lg" />
+      </div>
+
+      {/* Shop by Category Section */}
+      <div className="p-4">
+        <Skeleton className="h-8 w-48 mb-6" />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <div key={i} className="space-y-3">
+              <Skeleton className="h-32 w-full rounded-lg" />
+              <Skeleton className="h-4 w-3/4" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PageLoadingSkeleton() {
+  return (
+    <div className="min-h-screen w-full bg-background">
+      {/* Header Skeleton */}
+      <div className="border-b">
+        <div className="flex items-center justify-between p-4">
+          <Skeleton className="h-8 w-32" />
+          <div className="flex gap-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} className="h-6 w-20" />
+            ))}
+          </div>
+          <Skeleton className="h-8 w-8 rounded-full" />
+        </div>
+      </div>
+
+      {/* Content Area Skeleton */}
+      <div className="p-4">
+        <Skeleton className="h-10 w-full mb-6 rounded-lg" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="space-y-3">
+              <Skeleton className="h-48 w-full rounded-lg" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+//  Lazy loaded ADMIN pages
+// CHANGED: AdminDashboard is now eagerly loaded via static import above
 const AdminProducts = lazy(() => import("./pages/admin-view/products"));
 const AdminOrders = lazy(() => import("./pages/admin-view/orders"));
 const AdminFeatures = lazy(() => import("./pages/admin-view/features"));
 const UsersForAdmin = lazy(() => import("./pages/admin-view/users"));
 
-//  Lazy loaded SHOP pages 
-const ShoppingHome = lazy(() => import("./pages/shopping-view/home"));
+//  Lazy loaded SHOP pages
+// CHANGED: ShoppingHome is now eagerly loaded via static import above
 const ShoppingListing = lazy(() => import("./pages/shopping-view/listing"));
 const ShoppingAccount = lazy(() => import("./pages/shopping-view/account"));
 const ShoppingCheckout = lazy(() => import("./pages/shopping-view/checkout"));
-const PaypalReturnPage = lazy(() => import("./pages/shopping-view/paypal-return"));
-const PaymentSuccessPage = lazy(() => import("./pages/shopping-view/payment-success"));
+const PaypalReturnPage = lazy(
+  () => import("./pages/shopping-view/paypal-return"),
+);
+const PaymentSuccessPage = lazy(
+  () => import("./pages/shopping-view/payment-success"),
+);
 const Search = lazy(() => import("./pages/shopping-view/search"));
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
-    (state) => state.auth
+    (state) => state.auth,
   );
 
   const dispatch = useDispatch();
@@ -46,26 +122,21 @@ function App() {
     dispatch(checkAuth(token));
   }, [dispatch]);
 
-  // Preload admin pages after login 
+  // CHANGED: preload only the remaining lazy admin pages after login
   useEffect(() => {
     if (user?.role === "admin") {
-      import("./pages/admin-view/dashboard");
       import("./pages/admin-view/products");
       import("./pages/admin-view/orders");
     }
   }, [user]);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen p-4 w-full flex rounded-xl">
-        <Skeleton className="h-[600px] w-[600px]" />
-      </div>
-    );
+    return <InitialLoadingSkeleton />;
   }
 
   return (
     <div className="flex flex-col bg-white">
-      <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
+      <Suspense fallback={<PageLoadingSkeleton />}>
         <Routes>
           {/* Root */}
           <Route
@@ -130,4 +201,3 @@ function App() {
 }
 
 export default App;
-

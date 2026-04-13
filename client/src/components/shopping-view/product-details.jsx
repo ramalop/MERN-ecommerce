@@ -11,13 +11,16 @@ import { setProductDetails } from "@/store/shop/product-slice";
 import { Label } from "../ui/label";
 import StarRatingComponent from "../common/star-rating";
 import { addReview, getAllReviews } from "@/store/shop/review-slice";
+import { Skeleton } from "../ui/skeleton";
 import { Loader2 } from "lucide-react";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails, isLoading }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
-  const { reviews } = useSelector((state) => state.shopReview);
+  const { reviews, isLoading: isLoadingReviews } = useSelector(
+    (state) => state.shopReview,
+  );
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -96,12 +99,48 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, isLoading }) => {
     grid grid-cols-1 md:grid-cols-2
     gap-4 md:gap-8
     p-4 md:p-8
-    max-h-[90vh] overflow-y-auto"
+    max-h-[90vh] overflow-y-auto
+    min-h-[500px]"
       >
         {isLoading ? (
-          <div className="flex items-center justify-center col-span-full min-h-[400px]">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          </div>
+          <>
+            <div className="relative overflow-hidden rounded-lg">
+              <Skeleton className="aspect-square w-full h-full" />
+            </div>
+            <div className="">
+              <div>
+                <Skeleton className="h-9 w-3/4 mb-3" />
+                <Skeleton className="h-6 w-full mb-2" />
+                <Skeleton className="h-6 w-5/6" />
+              </div>
+              <div className="flex items-center justify-between mt-5">
+                <Skeleton className="h-8 w-24" />
+                <Skeleton className="h-8 w-24" />
+              </div>
+              <div className="flex items-center gap-2 mt-2">
+                <Skeleton className="h-5 w-24" />
+              </div>
+              <div className="mt-5 mb-5">
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <Separator />
+              <div className="max-h-[300px] overflow-auto mt-5">
+                <Skeleton className="h-6 w-16 mb-4" />
+                <div className="grid gap-6">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex gap-4">
+                      <Skeleton className="w-10 h-10 rounded-full" />
+                      <div className="grid gap-2 flex-1">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-4 w-full" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
         ) : (
           <>
             <div className="relative overflow-hidden rounded-lg">
@@ -169,7 +208,20 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, isLoading }) => {
               <div className="max-h-[300px] overflow-auto">
                 <h2 className="text-xl font-bold mb-4">Riviews</h2>
                 <div className="grid gap-6">
-                  {reviews && reviews.length > 0 ? (
+                  {isLoadingReviews ? (
+                    <>
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="flex gap-4">
+                          <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+                          <div className="grid gap-2 flex-1">
+                            <Skeleton className="h-4 w-24" />
+                            <Skeleton className="h-4 w-32" />
+                            <Skeleton className="h-4 w-full" />
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  ) : reviews && reviews.length > 0 ? (
                     reviews.map((reviewItem) => (
                       <div key={reviewItem?._id} className="flex gap-4">
                         <Avatar className="w-10 h-10 border">

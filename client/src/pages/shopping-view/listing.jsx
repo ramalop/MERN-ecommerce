@@ -2,6 +2,7 @@ import ProductFilter from "@/components/shopping-view/filter";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -170,7 +171,18 @@ function ShoppingListing() {
 
         {/* PRODUCTS GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {productList?.length > 0 &&
+          {isLoading ? (
+            <>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <div key={i} className="space-y-3">
+                  <Skeleton className="h-48 w-full rounded-lg" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-8 w-full rounded" />
+                </div>
+              ))}
+            </>
+          ) : productList?.length > 0 ? (
             productList.map((productItem) => (
               <ShoppingProductTile
                 key={productItem._id}
@@ -179,7 +191,12 @@ function ShoppingListing() {
                 handleAddToCart={handleAddToCart}
                 loading={loadingProductId === productItem._id}
               />
-            ))}
+            ))
+          ) : (
+            <div className="col-span-full text-center py-8">
+              <p className="text-muted-foreground">No products found</p>
+            </div>
+          )}
         </div>
       </div>
 
