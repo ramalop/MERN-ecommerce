@@ -9,6 +9,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 import { addProductFormElements } from "@/config";
 import { addNewProduct, deleteProduct, editProduct, fetchAllProducts } from "@/store/admin/product-slice";
 import { Item } from "@radix-ui/react-select";
@@ -35,7 +36,7 @@ const AdminProducts = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [imageLoadingState, setImageLoadingState] = useState(false);
   const [currentEditedId, setCurrentEditedId] = useState(null);
-  const { productList } = useSelector((state) => state.adminProducts);
+  const { productList ,isLoading} = useSelector((state) => state.adminProducts);
 
   
 
@@ -100,63 +101,104 @@ const AdminProducts = () => {
 
 
   return (
-    <Fragment>
-      <div className="mb-5 w-full flex justify-end">
-        <Button onClick={() => setOpenCreateProductsDialogue(true)}>
-          Add new product
-        </Button>
-      </div>
-      <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-2">
-        {productList && productList.length > 0
-          ? productList.map((productItem) => (
-              <AdminProductTile
-                setCurrentEditedId={setCurrentEditedId}
-                setOpenCreateProductsDialogue = {setOpenCreateProductsDialogue}
-                setFormData = {setFormData}
-                product={productItem}
-                handleDelete={handleDelete}
-              />
-            ))
-          : null}
-      </div>
-      <Sheet
-        open={openCreateProductsDialogue}
-        onOpenChange={() => {setOpenCreateProductsDialogue(false)
-          setFormData(initialFormData)
-          setCurrentEditedId(null)
-        }
-        }
-      >
-        <SheetContent side="right" className="overflow-auto">
-          <SheetHeader>
-            <SheetTitle>{currentEditedId !==null?"Edit Product":"Add New Product"}</SheetTitle>
-            <SheetDescription>
-              Fill the form below to add a new product.
-            </SheetDescription>
-          </SheetHeader>
-          <ProductImageUpload
-            imageFile={imageFile}
-            setImageFile={setImageFile}
-            uploadedImageUrl={uploadedImageUrl}
-            setUploadedImageUrl={setUploadedImageUrl}
-            setImageLoadingState={setImageLoadingState}
-            imageLoadingState={imageLoadingState}
-            isEditMode={currentEditedId!==null}
-          />
-          <div className="py-6">
-            <CommonForm
-              onSubmit={onSubmit}
-              formControls={addProductFormElements}
-              formData={formData}
-              setFormData={setFormData}
-              buttonText={currentEditedId !==null?"Edit":"Add"}
-              isBtnDisabled={!isFormValid()}
-            ></CommonForm>
+  <Fragment>
+    <div className="mb-5 w-full flex justify-end">
+      <Button onClick={() => setOpenCreateProductsDialogue(true)}>
+        Add new product
+      </Button>
+    </div>
+
+    {/* 🔥 Products Grid / Skeleton */}
+    <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-2">
+      {isLoading ? (
+        // ✅ Skeleton UI
+        [1,2,3,4,5,6,7,8].map((i) => (
+          <div
+            key={i}
+            className="border rounded-lg p-3 flex flex-col gap-3"
+          >
+            {/* Image */}
+            <Skeleton className="w-full h-[180px] rounded-md" />
+
+            {/* Title */}
+            <Skeleton className="h-4 w-[70%]" />
+
+            {/* Price */}
+            <div className="flex justify-between">
+              <Skeleton className="h-4 w-[30%]" />
+              <Skeleton className="h-4 w-[30%]" />
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-2 mt-2">
+              <Skeleton className="h-8 w-full rounded-md" />
+              <Skeleton className="h-8 w-full rounded-md" />
+            </div>
           </div>
-        </SheetContent>
-      </Sheet>
-    </Fragment>
-  );
+        ))
+      ) : productList && productList.length > 0 ? (
+        // ✅ Actual Products
+        productList.map((productItem) => (
+          <AdminProductTile
+            key={productItem._id}
+            setCurrentEditedId={setCurrentEditedId}
+            setOpenCreateProductsDialogue={setOpenCreateProductsDialogue}
+            setFormData={setFormData}
+            product={productItem}
+            handleDelete={handleDelete}
+          />
+        ))
+      ) : (
+        // ✅ Empty State
+        <div className="col-span-full text-center py-10">
+          No products found
+        </div>
+      )}
+    </div>
+
+    {/* 🔥 Sheet */}
+    <Sheet
+      open={openCreateProductsDialogue}
+      onOpenChange={() => {
+        setOpenCreateProductsDialogue(false);
+        setFormData(initialFormData);
+        setCurrentEditedId(null);
+      }}
+    >
+      <SheetContent side="right" className="overflow-auto p-3">
+        <SheetHeader>
+          <SheetTitle>
+            {currentEditedId !== null ? "Edit Product" : "Add New Product"}
+          </SheetTitle>
+          <SheetDescription>
+            Fill the form below to add a new product.
+          </SheetDescription>
+        </SheetHeader>
+
+        <ProductImageUpload
+          imageFile={imageFile}
+          setImageFile={setImageFile}
+          uploadedImageUrl={uploadedImageUrl}
+          setUploadedImageUrl={setUploadedImageUrl}
+          setImageLoadingState={setImageLoadingState}
+          imageLoadingState={imageLoadingState}
+          isEditMode={currentEditedId !== null}
+        />
+
+        <div className="py-6">
+          <CommonForm
+            onSubmit={onSubmit}
+            formControls={addProductFormElements}
+            formData={formData}
+            setFormData={setFormData}
+            buttonText={currentEditedId !== null ? "Edit" : "Add"}
+            isBtnDisabled={!isFormValid()}
+          />
+        </div>
+      </SheetContent>
+    </Sheet>
+  </Fragment>
+);
 };
 
 export default AdminProducts;

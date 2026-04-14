@@ -9,10 +9,12 @@ import AdminOrderDetailsView from './order-details';
 import { Button } from '../ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { Separator } from '../ui/separator';
+import { useNavigate } from 'react-router-dom';
 
 const RecentOrdersForAdmin = ({recentOrders}) => {
    const [openDetailsDialogue,setOpenDetailsDialogue] = useState(false) 
    const {orderDetails} = useSelector(state=>state.adminOrder)
+   const navigate = useNavigate()
    
    const dispatch = useDispatch()
     function handleFetchOrderDetails(getId){
@@ -92,7 +94,7 @@ const RecentOrdersForAdmin = ({recentOrders}) => {
         
       </CardContent>
       <div className="flex justify-center w-full">
-        <Button >View All Orders</Button>
+        <Button onClick = {()=>navigate("/admin/orders")}>View All Orders</Button>
       </div>
       
       

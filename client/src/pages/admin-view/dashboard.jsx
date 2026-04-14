@@ -98,7 +98,20 @@ const AdminDashboard = () => {
   return (
     <>
       {isLoading ? (
-        <Skeleton />
+        <div className="flex flex-col gap-3 p-2 bg-gray-100 m-3">
+          <div className="flex flex-col gap-2 h-[400px]">
+            {[1,2,3,4,5,6,7].map((i)=>(<Skeleton key={i} className="w-full h-[50px]"/>))}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+            {[1,2,3,4].map((i)=>(<Skeleton key={i} className="h-[400px]"/>))}
+
+          </div>
+          <div className="flex flex-col gap-2 h-[400px]">
+            {[1,2,3,4,5,6,7].map((i)=>(<Skeleton key={i} className="w-full h-[50px]"/>))}
+          </div>
+          
+          
+        </div>
       ) : (
         <div className="flex gap-4 flex-col overflow-auto">
           <RecentOrdersForAdmin recentOrders={recentOrders} />
