@@ -133,12 +133,12 @@ const AdminDashboard = () => {
               setFormData(initialFormData);
             }}
           >
-            <SheetContent side="right" className="overflow-auto w-full">
-              <SheetHeader>
+            <SheetContent side="right" className="overflow-auto w-full p-3">
+              <SheetHeader className="mb-3">
                 <SheetTitle>Edit Product</SheetTitle>
-                <SheetDescription>Update product details</SheetDescription>
+                <SheetDescription >Update product details</SheetDescription>
               </SheetHeader>
-
+{/* 
               <ProductImageUpload
                 imageFile={imageFile}
                 setImageFile={setImageFile}
@@ -146,13 +146,13 @@ const AdminDashboard = () => {
                 setUploadedImageUrl={setUploadedImageUrl}
                 imageLoadingState={imageLoadingState}
                 setImageLoadingState={setImageLoadingState}
-              />
+              /> */}
 
               <CommonForm
                 formControls={addProductFormElements}
                 formData={formData}
                 setFormData={setFormData}
-                buttonText="Update Product"
+                buttonText="Edit Product"
                 onSubmit={onSubmit}
               />
             </SheetContent>
